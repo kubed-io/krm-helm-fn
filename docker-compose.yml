@@ -1,0 +1,10 @@
+version: '3'
+services:
+  krm-helm-fn:
+    build:
+      context: .
+    volumes:
+      - .:/workspace
+    environment:
+      - KUBECONFIG=/workspace/.kube/config
+    command: ["--help"]

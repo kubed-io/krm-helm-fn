@@ -1,0 +1,22 @@
+apiVersion: krm.kubed.io
+kind: HelmRelease
+metadata:
+  name: my-app
+  namespace: my-system
+  annotations: 
+    config.kubernetes.io/function: |
+      container: 
+        image: kubed/krm-helm-fn:latest
+spec:
+  provider: rancher
+  chart:
+    name: hello-world
+    version: 0.1.0
+    repo: https://helm.github.io/examples
+  includeCRDs: true
+  values:
+    replicaCount: 2
+  valuesSelector:
+    kind: Secret
+    annotations:
+      krm.kubed.io/helm-values: "my-app"

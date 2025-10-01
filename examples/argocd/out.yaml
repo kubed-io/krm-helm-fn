@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+spec:
+  destination:
+    namespace: my-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: hello-world
+    helm:
+      valuesObject:
+        replicaCount: 2
+        service:
+          port: 443
+    repoURL: https://helm.github.io/examples
+    targetRevision: 0.1.0
+  syncPolicy: {}

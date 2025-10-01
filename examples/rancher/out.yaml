@@ -1,0 +1,14 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: my-app
+  namespace: my-system
+spec:
+  chart: hello-world
+  repo: https://helm.github.io/examples
+  targetNamespace: my-system
+  version: 0.1.0
+  valuesSecrets:
+  - name: my-app-values
+    keys:
+    - values.yaml

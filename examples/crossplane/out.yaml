@@ -1,0 +1,21 @@
+apiVersion: helm.crossplane.io/v1beta1
+kind: Release
+metadata:
+  name: my-app
+  # no namespace because it's a cluster-scoped resource
+spec:
+  forProvider:
+    chart:
+      name: hello-world
+      url: https://helm.github.io/examples
+      version: 0.1.0
+    namespace: my-system
+    values:
+      replicaCount: 2
+    valuesFrom:
+    - configMapKeyRef:
+        key: values.yaml
+        name: my-app-values
+        namespace: my-system
+  providerConfigRef:
+    name: default
