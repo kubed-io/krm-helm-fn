@@ -1,0 +1,131 @@
+{
+  "version": "2.0.0",
+  "options": {
+    "env": {}
+  },
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "go: build",
+      "detail": "Build the KRM Helm function binary",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "command": "go",
+      "args": [
+        "build",
+        "-o",
+        "bin/function",
+        "./cmd/function"
+      ],
+      "problemMatcher": ["$go"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "go: test",
+      "detail": "Run all Go tests",
+      "group": "test",
+      "command": "go",
+      "args": [
+        "test",
+        "-v",
+        "./..."
+      ],
+      "problemMatcher": ["$go"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "go: clean",
+      "detail": "Clean build artifacts and mod cache",
+      "group": "build",
+      "command": "go",
+      "args": [
+        "clean",
+        "-cache",
+        "-modcache"
+      ],
+      "dependsOrder": "sequence",
+      "dependsOn": ["clean: bin"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "clean: bin",
+      "detail": "Remove the bin directory",
+      "group": "build",
+      "command": "rm",
+      "args": [
+        "-rf",
+        "bin/"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "go: mod tidy",
+      "detail": "Tidy Go module dependencies",
+      "group": "build",
+      "command": "go",
+      "args": [
+        "mod",
+        "tidy"
+      ],
+      "problemMatcher": ["$go"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "go: run function",
+      "detail": "Run the KRM function binary",
+      "group": "build",
+      "command": "./bin/function",
+      "args": [],
+      "dependsOn": "go: build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "bake image",
+      "detail": "Build Docker image using buildx bake. Use for multi arch builds.",
+      "group": "build",
+      "command": "docker",
+      "args": [
+        "buildx",
+        "bake"
+      ]
+    }
+  ]
+}

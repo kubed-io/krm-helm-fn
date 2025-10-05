@@ -180,7 +180,9 @@ Each provider has its own way of handling Helm values, but this function provide
 - KPT/KRM Functions
   - [KPT Catalog for render-helm-chart](https://catalog.kpt.dev/render-helm-chart/v0.2/)
   - [krm-function-catalog for render-helm-chart](https://github.com/kptdev/krm-functions-catalog/tree/master/functions/go/render-helm-chart) - This is the inspirational start for this project. The example function which happens to do the inflator for helm charts.
-  - [Good Example of KRM go function]
+  - [KPT Dev - Developing in Go](https://kpt.dev/book/05-developing-functions/#developing-in-go)
+  - [KRM Functions Registry](https://github.com/kubernetes-sigs/krm-functions-registry)
+  - [KRM Function Spec](https://github.com/kubernetes-sigs/kustomize/blob/master/cmd/config/docs/api-conventions/functions-spec.md)
 - Kustomize
   - [Kustomize Helm Inflator](https://kubectl.docs.kubernetes.io/references/kustomize/builtins/#_helmchartinflationgenerator_)
   - [Kustomize configMapGenerator](https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/configmapgenerator/)

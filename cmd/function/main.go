@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/GoogleContainerTools/kpt-functions-sdk/go/fn"
-	"github.com/kubed-io/krm-helm-fn/pkg/helmfn"
+	"github.com/kptdev/krm-functions-sdk/go/fn"
+	"github.com/kubed-io/krm-helm-fn/helmfn"
 )
 
 func main() {

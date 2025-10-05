@@ -1,10 +1,17 @@
-version: '3'
 services:
   krm-helm-fn:
+    image: kubed/krm-helm-fn:latest
+    container_name: krm-helm-fn
     build:
       context: .
-    volumes:
-      - .:/workspace
-    environment:
-      - KUBECONFIG=/workspace/.kube/config
-    command: ["--help"]
+      target: final
+      tags:
+      - kubed/krm-helm-fn:latest
+      - kubed/krm-helm-fn:${GIT_SHA:-latest}
+      - kubed/krm-helm-fn:${GIT_REF:-latest}
+      x-bake:
+        platforms:
+        - linux/amd64
+        - linux/arm64
+        cache-to: type=gha,mode=max,scope=krm-helm-fn
+        cache-from: type=gha,scope=krm-helm-fn
