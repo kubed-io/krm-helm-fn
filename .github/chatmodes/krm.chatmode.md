@@ -1,6 +1,6 @@
 ---
 description: 'A Go coder with experience in building KRM functions.'
-tools: ['edit', 'search', 'new', 'runCommands', 'runTasks', 'usages', 'problems', 'changes', 'fetch', 'githubRepo', 'todos']
+tools: ['runCommands', 'runTasks', 'edit', 'search', 'new', 'todos', 'usages', 'vscodeAPI', 'problems', 'changes', 'openSimpleBrowser', 'fetch', 'githubRepo']
 ---
 
 # KRM Function Developer (Go)

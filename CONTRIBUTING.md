@@ -46,3 +46,32 @@ To run all the tests in the project, use the following Go command:
 ```sh
 go test -v ./...
 ```
+
+### Docker Build and Testing Examples
+
+**Important**: After making any code changes, you must rebuild the Docker image before testing examples with kustomize. The examples use the Docker image to run the KRM function, not the local binary.
+
+#### Build Docker Image
+
+From the project root directory, run:
+```sh
+docker compose build
+```
+
+This builds the `kubed/krm-helm-fn:latest` image that contains your latest code changes.
+
+#### Testing Examples
+
+Once the Docker image is built, you can test any example using kustomize:
+```sh
+cd examples/<provider-name>
+kustomize build --enable-alpha-plugins --enable-exec --network --enable-helm .
+```
+
+For example, to test the Crossplane provider:
+```sh
+cd examples/crossplane
+kustomize build --enable-alpha-plugins --enable-exec --network --enable-helm .
+```
+
+**Note**: If you forget to run `docker compose build` after code changes, you'll be testing against the old version of the code and may see stale behavior or "unsupported provider" errors.

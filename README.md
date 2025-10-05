@@ -23,13 +23,13 @@ Each of the folders in the examples directory contain a kustomization.yaml file 
 Simply run with the build command replacing `<name>` with the name of the example directory. 
 
 ```bash
-kubectl build examples/<name>
+kubectl build --enable-alpha-plugins --enable-exec --network --enable-helm  examples/<name>
 ```
 
 For example, run the inflator with: 
 
 ```bash
-kubectl build examples/inflate
+kubectl build --enable-alpha-plugins --enable-exec --network --enable-helm  examples/inflate
 ```
 
 ## Providers Classes

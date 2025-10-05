@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	"github.com/kptdev/krm-functions-sdk/go/fn"
+	"github.com/kubed-io/krm-helm-fn/helmfn/types"
+	"sigs.k8s.io/yaml"
 )
 
 // ExampleFiles represents the files in an example directory
@@ -70,6 +72,23 @@ func (ef *ExampleFiles) CreateResourceList() *fn.ResourceList {
 		Items:          []*fn.KubeObject{ef.Values},
 	}
 	return rl
+}
+
+// ParseHelmRelease converts the Release KubeObject to a HelmRelease struct
+func (ef *ExampleFiles) ParseHelmRelease() (*types.HelmRelease, error) {
+	return ParseHelmReleaseFromKubeObject(ef.Release)
+}
+
+// ParseHelmReleaseFromKubeObject converts a KubeObject to HelmRelease struct for testing
+func ParseHelmReleaseFromKubeObject(obj *fn.KubeObject) (*types.HelmRelease, error) {
+	yamlBytes := obj.String()
+
+	var helmRelease types.HelmRelease
+	if err := yaml.Unmarshal([]byte(yamlBytes), &helmRelease); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal HelmRelease: %w", err)
+	}
+
+	return &helmRelease, nil
 }
 
 // createValuesConfigMap creates a ConfigMap from values.yaml content
