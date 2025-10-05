@@ -19,7 +19,9 @@
         "bin/function",
         "./cmd/function"
       ],
-      "problemMatcher": ["$go"],
+      "problemMatcher": [
+        "$go"
+      ],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -38,7 +40,9 @@
         "-v",
         "./..."
       ],
-      "problemMatcher": ["$go"],
+      "problemMatcher": [
+        "$go"
+      ],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -58,7 +62,9 @@
         "-modcache"
       ],
       "dependsOrder": "sequence",
-      "dependsOn": ["clean: bin"],
+      "dependsOn": [
+        "clean: bin"
+      ],
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -93,13 +99,26 @@
         "mod",
         "tidy"
       ],
-      "problemMatcher": ["$go"],
+      "problemMatcher": [
+        "$go"
+      ],
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": false,
         "panel": "shared"
       }
+    },
+    {
+      "type": "shell",
+      "label": "go: format",
+      "detail": "Run gofmt to format Go code",
+      "group": "build",
+      "command": "gofmt",
+      "args": [
+        "-w",
+        "."
+      ]
     },
     {
       "type": "shell",

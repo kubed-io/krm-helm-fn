@@ -1,8 +1,8 @@
 package argocd
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"github.com/kubed-io/krm-helm-fn/helmfn/types"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // ArgoCDApplication represents an ArgoCD Application resource
