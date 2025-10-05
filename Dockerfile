@@ -32,7 +32,7 @@ ENV PATH=/usr/local/bin:$PATH \
 
 ENTRYPOINT ["function"]
 
-FROM mcr.microsoft.com/devcontainers/go:1.24 as devcontainer
+FROM mcr.microsoft.com/devcontainers/go:1.24 AS devcontainer
 
 # install kustomize
 RUN <<EOF
