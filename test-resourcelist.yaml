@@ -1,0 +1,37 @@
+apiVersion: config.kubernetes.io/v1
+kind: ResourceList
+functionConfig:
+  apiVersion: krm.kubed.io
+  kind: HelmRelease
+  metadata:
+    name: my-app
+    namespace: my-system
+    annotations: 
+      config.kubernetes.io/function: |
+        container: 
+          image: kubed/krm-helm-fn:latest
+  spec:
+    provider: argocd
+    chart:
+      name: hello-world
+      version: 0.1.0
+      repo: https://helm.github.io/examples
+    includeCRDs: true
+    apiVersions:
+    - example.com/v1
+    values:
+      replicaCount: 2
+    valuesSelector:
+      annotations:
+        krm.kubed.io/helm-values: "my-app"
+items:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: my-app-values-12345
+    annotations:
+      krm.kubed.io/helm-values: "my-app"
+  data:
+    values.yaml: |
+      service:
+        port: 443

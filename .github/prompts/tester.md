@@ -4,6 +4,7 @@ Requirements:
 - loads the out.yaml from the examples to use as a success criteria for only the release objects
 - uses the release.yaml from the examples to create the release objects
 - manually add the confimap objects with values into the resource list versus trying to run the configmap generator
+- since argocd is in a hello world like state, only check that the apiVersion, and kind are set correctly o nthe output
 
 Tasks: 
 - research examples structure and files

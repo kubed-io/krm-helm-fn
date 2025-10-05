@@ -1,0 +1,60 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  pr-check:
+    name: Pull Request Validation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository code
+      id: checkout
+      uses: actions/checkout@v5
+
+    - name: Set up Go
+      id: setup-go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.24'
+
+    - name: Tidy Go module dependencies
+      id: mod-tidy
+      run: go mod tidy
+
+    - name: Verify no changes after mod tidy
+      id: verify-mod-tidy
+      run: git diff --exit-code
+
+    - name: Lint project with golangci-lint
+      id: lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: latest
+
+    - name: Run go vet
+      id: vet
+      run: go vet ./...
+
+    - name: Format code with gofmt
+      id: format
+      run: gofmt -l .
+
+    - name: Verify no formatting changes needed
+      id: verify-format
+      run: |
+        if [ "$(gofmt -l . | wc -l)" -gt 0 ]; then
+          echo "Code is not properly formatted. Run 'gofmt -w .' to fix."
+          gofmt -l .
+          exit 1
+        fi
+
+    - name: Build KRM Helm function binary
+      id: build
+      run: go build -o bin/function ./cmd/function
+
+    - name: Run all Go tests
+      id: test
+      run: go test -v ./...
