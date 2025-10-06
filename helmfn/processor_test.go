@@ -161,3 +161,49 @@ func TestProcessCrossplaneExample(t *testing.T) {
 		t.Errorf("Expected empty namespace for cluster-scoped resource, got '%s'", generatedRelease.GetNamespace())
 	}
 }
+
+// TestProcessRancherExample tests the full processor pipeline using the rancher example
+func TestProcessRancherExample(t *testing.T) {
+	// Load the rancher example files
+	exampleDir := filepath.Join("..", "examples", "rancher")
+	example, err := testutil.LoadExampleFiles(exampleDir)
+	if err != nil {
+		t.Fatalf("Failed to load example files: %v", err)
+	}
+
+	// Create ResourceList from example
+	rl := example.CreateResourceList()
+
+	// Process the ResourceList
+	_, err = Process(rl)
+	if err != nil {
+		t.Fatalf("Process failed: %v", err)
+	}
+
+	// Verify that an output was generated
+	if len(rl.Items) < 2 { // Original ConfigMap + generated Rancher HelmChart
+		t.Errorf("Expected at least 2 items in output (ConfigMap + HelmChart), got %d", len(rl.Items))
+	}
+
+	// Find the generated Rancher HelmChart
+	var generatedChart *fn.KubeObject
+	for _, item := range rl.Items {
+		if item.GetKind() == "HelmChart" && item.GetAPIVersion() == "helm.cattle.io/v1" {
+			generatedChart = item
+			break
+		}
+	}
+
+	if generatedChart == nil {
+		t.Fatal("No Rancher HelmChart was generated")
+	}
+
+	// Verify the generated chart has correct basic properties
+	if generatedChart.GetName() != "my-app" {
+		t.Errorf("Expected chart name 'my-app', got '%s'", generatedChart.GetName())
+	}
+
+	if generatedChart.GetNamespace() != "my-system" {
+		t.Errorf("Expected chart namespace 'my-system', got '%s'", generatedChart.GetNamespace())
+	}
+}

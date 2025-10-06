@@ -8,6 +8,7 @@ import (
 	"github.com/kubed-io/krm-helm-fn/providers/argocd"
 	"github.com/kubed-io/krm-helm-fn/providers/crossplane"
 	"github.com/kubed-io/krm-helm-fn/providers/fluxcd"
+	"github.com/kubed-io/krm-helm-fn/providers/rancher"
 	"sigs.k8s.io/yaml"
 )
 
@@ -48,6 +49,11 @@ func Process(rl *fn.ResourceList) (bool, error) {
 		DebugLog("Processing FluxCD provider")
 		if err := processFluxCDProvider(rl, helmRelease); err != nil {
 			return false, fmt.Errorf("failed to process FluxCD provider: %w", err)
+		}
+	case "rancher":
+		DebugLog("Processing Rancher provider")
+		if err := processRancherProvider(rl, helmRelease); err != nil {
+			return false, fmt.Errorf("failed to process Rancher provider: %w", err)
 		}
 	default:
 		return false, fmt.Errorf("unsupported provider: %s", helmRelease.Spec.Provider)
@@ -171,6 +177,36 @@ func processCrossplaneProvider(rl *fn.ResourceList, helmRelease *types.HelmRelea
 	rl.Items = append(rl.Items, releaseObj)
 
 	DebugLog("Added Crossplane Release to output")
+
+	return nil
+}
+
+// processRancherProvider handles Rancher provider processing
+func processRancherProvider(rl *fn.ResourceList, helmRelease *types.HelmRelease) error {
+	// Create Rancher provider
+	provider := rancher.NewRancherProvider()
+
+	// Generate Rancher HelmChart
+	helmChart, err := provider.GenerateHelmChart(helmRelease)
+	if err != nil {
+		return fmt.Errorf("failed to generate Rancher HelmChart: %w", err)
+	}
+
+	// Convert to KubeObject
+	helmChartBytes, err := yaml.Marshal(helmChart)
+	if err != nil {
+		return fmt.Errorf("failed to marshal Rancher HelmChart: %w", err)
+	}
+
+	helmChartObj, err := fn.ParseKubeObject(helmChartBytes)
+	if err != nil {
+		return fmt.Errorf("failed to unmarshal to KubeObject: %w", err)
+	}
+
+	// Add the Rancher HelmChart to the output items
+	rl.Items = append(rl.Items, helmChartObj)
+
+	DebugLog("Added Rancher HelmChart to output")
 
 	return nil
 }

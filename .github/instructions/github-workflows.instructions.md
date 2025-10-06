@@ -29,3 +29,22 @@ Example:
   id: checkout
   uses: actions/checkout@v3
 ```
+
+## Printing Multiline Output
+
+- always use `cat` command with heredoc syntax for printing multiple lines of output instead of using echo many times.
+  Example:
+  ```yaml
+  - name: Display development environment summary
+    id: env-summary
+    run: |
+      cat <<EOF
+      === Development Environment Ready ===
+      Go version: $(go version)
+      Helm version: $(helm version --short)
+      kubectl version: $(kubectl version --client --short)
+      =====================================
+      EOF
+  ```
+- this is the preferred way to output to $GITHUB_STEP_SUMMARY file as well.
+  
