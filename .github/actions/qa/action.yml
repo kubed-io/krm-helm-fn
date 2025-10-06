@@ -1,0 +1,36 @@
+name: Quality Assurance
+description: Run quality assurance checks including linting, formatting, and verification
+
+runs:
+  using: composite
+  steps:
+  - name: Verify no changes after mod tidy
+    id: verify-mod-tidy
+    shell: bash
+    run: git diff --exit-code
+
+  - name: Lint project with golangci-lint
+    id: lint
+    uses: golangci/golangci-lint-action@v6
+    with:
+      version: latest
+
+  - name: Run go vet
+    id: vet
+    shell: bash
+    run: go vet ./...
+
+  - name: Check code formatting
+    id: format-check
+    shell: bash
+    run: gofmt -l .
+
+  - name: Verify no formatting changes needed
+    id: verify-format
+    shell: bash
+    run: |
+      if [ "$(gofmt -l . | wc -l)" -gt 0 ]; then
+        echo "Code is not properly formatted. Run 'gofmt -w .' to fix."
+        gofmt -l .
+        exit 1
+      fi

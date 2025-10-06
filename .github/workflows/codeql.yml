@@ -1,0 +1,53 @@
+name: CodeQL Code Scanning
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch:
+    inputs: {}
+
+permissions:
+  security-events: write
+  actions: read
+  contents: read
+
+jobs:
+  codeql-analysis:
+    name: CodeQL Security Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Setup Go Environment
+      id: setup
+      uses: ./.github/actions/setup
+      with:
+        go-version: '1.24'
+        install-deps: 'true'
+
+    - name: Initialize CodeQL
+      id: init-codeql
+      uses: github/codeql-action/init@v3
+      with:
+        languages: go
+        build-mode: autobuild
+        # Use the default CodeQL query suite for Go
+        # Optionally specify custom query packs:
+        # queries: security-extended,security-and-quality
+
+    - name: Perform CodeQL Analysis
+      id: analyze-codeql
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:go"
+        upload: true
+
+    - name: Save SARIF File
+      id: save-sarif
+      uses: actions/upload-artifact@v4
+      with:
+        name: sarif
+        path: ${{ steps.analyze-codeql.outputs.sarif-output }}

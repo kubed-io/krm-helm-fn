@@ -1,0 +1,50 @@
+name: Copilot Setup Steps
+
+# Automatically run the setup steps when they are changed to allow for easy validation, and
+# allow manual testing through the repository's "Actions" tab
+on:
+  workflow_dispatch:
+  push:
+    paths:
+    - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+    - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  copilot-setup-steps:
+    name: Setup Development Environment for Copilot
+    runs-on: ubuntu-latest
+
+    # Set the permissions to the lowest permissions possible needed for your steps.
+    # Copilot will be given its own token for its operations.
+    permissions:
+      contents: read
+
+    # You can define any steps you want, and they will run before the agent starts.
+    # If you do not check out your code, Copilot will do this for you.
+    steps:
+    - name: Setup Go Environment
+      id: setup
+      uses: ./.github/actions/setup
+      with:
+        go-version: '1.24'
+        install-deps: 'true'
+        install-tools: 'true'
+        build-binary: 'true'
+
+    - name: Run Quality Assurance Checks
+      id: qa
+      uses: ./.github/actions/qa
+
+    - name: Display development environment summary
+      id: env-summary
+      run: |
+        cat <<EOF
+        === Development Environment Ready ===
+        Go version: $(go version)
+        Helm version: $(helm version --short)
+        kubectl version: $(kubectl version --client --short)
+        =====================================
+        EOF
