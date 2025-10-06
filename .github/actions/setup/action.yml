@@ -1,15 +1,6 @@
 name: Setup Go Environment
 description: Setup the Go development environment with dependencies and tools
 inputs:
-  ref:
-    description: The git ref to build on
-    required: false
-  fetch-depth:
-    description: The depth of the git checkout
-    required: false
-  fetch-tags:
-    description: Whether to fetch tags
-    required: false
   go-version:
     description: The Go version to use
     required: false
@@ -26,22 +17,10 @@ inputs:
     description: Whether to build the function binary
     required: false
     default: "false"
-  submodules:
-    description: Whether to fetch submodules
-    required: false
-    default: "false"
 
 runs:
   using: composite
   steps:
-  - name: Checkout Code
-    uses: actions/checkout@v5
-    with:
-      ref: ${{ inputs.ref }}
-      fetch-depth: ${{ inputs.fetch-depth }}
-      fetch-tags: ${{ inputs.fetch-tags }}
-      submodules: ${{ inputs.submodules }}
-
   - name: Set up Go
     uses: actions/setup-go@v5
     with:
